@@ -81,17 +81,25 @@ class Marty::MainAuthApp < Marty::AuthApp
     []
   end
 
-  def menu
-    return super unless self.class.has_any_perm?
+  def system_menu_if_authed
+    if self.class.has_admin_perm? || self.class.has_user_manager_perm?
+      [system_menu]
+    else
+      []
+    end
+  end
 
-    [ident_menu, sep] +
-      (self.class.has_admin_perm? ||
-       self.class.has_user_manager_perm? ? [system_menu, sep] : []) +
-      data_menus +
-      [
-       applications_menu, sep,
-       posting_menu, sep,
-      ] + super
+  def menu
+    menu = if self.class.has_any_perm?
+      ( [ident_menu] +
+        system_menu_if_authed +
+        [applications_menu, posting_menu]
+        ).map { |item| [item, sep] }.flatten
+    else
+      []
+    end
+
+    menu + super
   end
 
   ######################################################################

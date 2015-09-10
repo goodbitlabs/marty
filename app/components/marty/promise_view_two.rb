@@ -53,8 +53,10 @@ class Marty::PromiseViewTwo < Netzke::Basepack::Tree
       :cformat,
       :error,
     ]
+
+    config.root = true
     config.root_visible = false
-    config.enable_pagination = false
+
     config.bbar = bbar
 
     # garbage collect old promises (hacky to do this here)
@@ -132,10 +134,10 @@ class Marty::PromiseViewTwo < Netzke::Basepack::Tree
     this.on_refresh
   end
 
-  def get_records params
-    search_scope = config[:live_search_scope] || :live_search
-    Marty::Promise.children_for_id(params[:id], params[search_scope])
-  end
+  # def get_records params
+  #   search_scope = config[:live_search_scope] || :live_search
+  #   Marty::Promise.children_for_id(params[:id], params[search_scope])
+  # end
 
   column :title do |config|
     config.text = I18n.t('jobs.title')
@@ -150,7 +152,7 @@ class Marty::PromiseViewTwo < Netzke::Basepack::Tree
   column :job_id do |config|
     config.width = 90
   end
-  
+
   column :start_dt do |config|
     config.text = I18n.t('jobs.start_dt')
   end
